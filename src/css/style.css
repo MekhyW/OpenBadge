@@ -1,0 +1,664 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #000;
+}
+
+/* ─── Loading overlay ─────────────────────────────────────── */
+
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  transition: opacity 0.4s ease;
+}
+
+#loading-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#loading-bar-container {
+  width: 60%;
+  max-width: 300px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+#loading-bar {
+  width: 0%;
+  height: 100%;
+  background: #8ab4f8;
+  border-radius: 2px;
+  transition: width 0.15s ease;
+}
+
+#mascot-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#mascot-container video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bg-video {
+  z-index: 0;
+}
+
+.layer-video {
+  z-index: 1;
+  background: transparent;
+  /* Reset defaults — sizing controlled via inline styles */
+  inset: auto;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: opacity 2s ease;
+  /* will-change is applied inline only during opacity transitions
+     (see AnimationEngine.beginLayerTransition) to avoid holding GPU
+     memory for these large layers permanently. */
+}
+
+
+#mascot-container .layer-video {
+  inset: auto;
+}
+
+.character-video {
+  z-index: 10;
+  background: transparent;
+}
+
+/* Hide native Android play button / poster overlay */
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+video::-webkit-media-controls-overlay-play-button {
+  display: none !important;
+}
+
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+}
+
+.video-visible {
+  opacity: 1;
+}
+
+.video-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ─── Counters HUD ────────────────────────────────────────── */
+
+#counters-hud {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 10px;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.counter-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.counter-label {
+  opacity: 0.7;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.counter-value {
+  font-weight: bold;
+  min-width: 24px;
+  text-align: right;
+}
+
+#socket-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.socket-connected {
+  background: #4caf50;
+  box-shadow: 0 0 4px #4caf50;
+}
+
+.socket-disconnected {
+  background: #f44336;
+  box-shadow: 0 0 4px #f44336;
+}
+
+/* ─── Debug Panel ─────────────────────────────────────────── */
+
+#debug-toggle-btn {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  z-index: 1000;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#debug-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 999;
+  width: min(320px, 85vw);
+  max-height: 100vh;
+  overflow-y: auto;
+  background: rgba(15, 15, 20, 0.92);
+  color: #e0e0e0;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 200ms ease;
+}
+
+#debug-panel.debug-hidden {
+  transform: translateX(100%);
+  pointer-events: none;
+}
+
+#debug-panel.debug-visible {
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.debug-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.06);
+  font-weight: bold;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#debug-close-btn {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 2px 6px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Debug tabs ── */
+
+.debug-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.debug-tab {
+  flex: 1;
+  padding: 8px 0;
+  border: none;
+  background: none;
+  color: #888;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  border-bottom: 2px solid transparent;
+  transition: color 120ms, border-color 120ms;
+}
+
+.debug-tab:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.debug-tab-active {
+  color: #8ab4f8;
+  border-bottom-color: #8ab4f8;
+}
+
+.debug-tab-hidden {
+  display: none;
+}
+
+.debug-section {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.debug-title {
+  font-weight: bold;
+  color: #8ab4f8;
+  margin-bottom: 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.debug-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  gap: 8px;
+}
+
+.debug-row.dim {
+  color: #666;
+  font-style: italic;
+}
+
+.debug-value {
+  color: #c8c8c8;
+  text-align: right;
+  word-break: break-all;
+}
+
+.debug-badge {
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.badge-idle {
+  background: #1b5e20;
+  color: #a5d6a7;
+}
+
+.badge-active {
+  background: #e65100;
+  color: #ffcc80;
+}
+
+.anim-row {
+  font-size: 11px;
+}
+
+.anim-playing {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+.debug-legend {
+  color: #888;
+  font-size: 10px;
+  text-align: center;
+}
+
+/* ── Debug buttons ── */
+
+.debug-btn {
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ccc;
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 120ms;
+}
+
+.debug-btn:active {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.debug-btn-active {
+  background: #1565c0;
+  border-color: #42a5f5;
+  color: #fff;
+}
+
+.debug-btn-warn {
+  border-color: rgba(255, 160, 0, 0.35);
+  color: #ffb74d;
+}
+
+.debug-btn-warn:active {
+  background: rgba(255, 160, 0, 0.2);
+}
+
+.debug-btn-danger {
+  border-color: rgba(244, 67, 54, 0.35);
+  color: #ef9a9a;
+}
+
+.debug-btn-danger:active {
+  background: rgba(244, 67, 54, 0.2);
+}
+
+.debug-btn-sm {
+  padding: 3px 8px;
+  font-size: 10px;
+}
+
+.debug-btn-full {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.debug-btn-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.debug-btn-row {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.debug-anim-card {
+  padding: 6px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.debug-anim-card:last-child {
+  border-bottom: none;
+}
+
+.debug-anim-card.anim-playing {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+}
+
+.anim-detail {
+  font-size: 10px;
+  color: #888;
+  padding: 0 0 0 20px;
+}
+
+.debug-layer-card {
+  padding: 6px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.debug-layer-card:last-child {
+  border-bottom: none;
+}
+
+.debug-layer-source {
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.debug-speed-row {
+  display: grid;
+  grid-template-columns: 44px 1fr 42px;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.debug-speed-row-with-reset {
+  display: grid;
+  grid-template-columns: 44px 1fr 42px 28px;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.debug-speed-reset {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.08);
+  color: #9aa0a6;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.debug-speed-reset:active {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+}
+
+.debug-speed-label {
+  font-size: 10px;
+  color: #9aa0a6;
+  text-transform: uppercase;
+}
+
+.debug-slider {
+  position: relative;
+  width: 100%;
+  height: 36px;
+  touch-action: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.debug-slider-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.15);
+  pointer-events: none;
+}
+
+.debug-slider-fill {
+  position: absolute;
+  left: 0;
+  height: 4px;
+  border-radius: 2px;
+  background: #6cb4ee;
+  pointer-events: none;
+}
+
+.debug-slider-thumb {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #6cb4ee;
+  border: 2px solid #fff;
+  transform: translateX(-50%);
+  pointer-events: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+.debug-slider.debug-slider-active .debug-slider-thumb {
+  transform: translateX(-50%) scale(1.2);
+  background: #8ec8f6;
+}
+
+.debug-speed-value {
+  font-size: 10px;
+  color: #c8c8c8;
+  text-align: right;
+}
+
+/* ── Touch region overlays ── */
+
+#debug-touch-overlays {
+  position: absolute;
+  inset: 0;
+  z-index: 900;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.debug-touch-region {
+  position: absolute;
+  border: 2px dashed;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.debug-touch-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 1px 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 0 0 4px 0;
+  white-space: nowrap;
+}
+
+/* ── Config tab ── */
+
+.debug-config-card {
+  border-left: 2px solid rgba(138, 180, 248, 0.3);
+  margin-left: 4px;
+  padding-left: 10px;
+}
+
+.debug-config-sub {
+  margin-top: 4px;
+  padding-left: 8px;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.debug-config-sub-title {
+  font-size: 10px;
+  font-weight: bold;
+  color: #a0a0a0;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.debug-config-trigger {
+  padding: 3px 0 3px 6px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.debug-config-trigger:last-child {
+  border-bottom: none;
+}
+
+.badge-touch {
+  background: #1a237e;
+  color: #90caf9;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.badge-random {
+  background: #4a148c;
+  color: #ce93d8;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+/* ── API Log entries ── */
+
+.debug-log-entry {
+  display: flex;
+  gap: 5px;
+  padding: 2px 0;
+  font-size: 10px;
+  line-height: 1.4;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  align-items: flex-start;
+}
+
+.debug-log-entry:last-child {
+  border-bottom: none;
+}
+
+.debug-log-time {
+  color: #666;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.debug-log-tag {
+  font-weight: bold;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.debug-log-msg {
+  color: #c8c8c8;
+  word-break: break-word;
+}
+
+.debug-url {
+  font-size: 10px;
+  color: #90caf9;
+  word-break: break-all;
+  text-align: right;
+  max-width: 180px;
+}

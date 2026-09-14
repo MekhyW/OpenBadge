@@ -1,0 +1,962 @@
+{
+    "settings": {
+        "defaultScene": "normal"
+    },
+    "scenes": [
+        {
+            "id": "normal",
+            "background": {
+                "source": "animations/Normal/nick normal background.webm",
+                "loop": true
+            },
+            "entryAnimation": {
+                "source": "animations/Normal/nick normal portal out.webm",
+                "loop": false
+            },
+            "exitAnimation": {
+                "source": "animations/Normal/nick normal portal in.webm",
+                "loop": false
+            },
+            "sceneDuration": {
+                "min": 90000,
+                "max": 150000
+            },
+            "additionalLayers": [
+                {
+                    "id": "tail",
+                    "source": "animations/Normal/nick normal tail.webm",
+                    "loop": true,
+                    "layerOrder": 2,
+                    "layerPriority": "background",
+                    "position": {
+                        "x": 0,
+                        "y": 0
+                    }
+                },
+                {
+                    "id": "name",
+                    "source": "animations/nick name.webm",
+                    "loop": true,
+                    "layerOrder": 2,
+                    "layerPriority": "foreground",
+                    "alignment": {
+                        "horizontal": "center",
+                        "vertical": "bottom"
+                    },
+                    "size": {
+                        "width": "100%",
+                        "height": "auto"
+                    }
+                }
+            ],
+            "defaultAnimation": "idle",
+            "defaultMood": "neutral",
+            "moods": [
+                {
+                    "id": "neutral",
+                    "setAnimations": [
+                        {
+                            "animation": "tail",
+                            "speed": 1
+                        }
+                    ],
+                    "interactionTriggers": []
+                },
+                {
+                    "id": "happy",
+                    "setAnimations": [
+                        {
+                            "animation": "tail",
+                            "speed": 2
+                        }
+                    ],
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 40000,
+                                "max": 50000
+                            },
+                            "duration": 10000,
+                            "waitForCompletion": false
+                        }
+                    ]
+                }
+            ],
+            "animations": [
+                {
+                    "id": "idle",
+                    "source": "animations/Normal/nick normal idle.webm",
+                    "loop": true
+                },
+                {
+                    "id": "lookaround",
+                    "source": "animations/Normal/nick normal lookaround.webm",
+                    "loop": false,
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 10000,
+                                "max": 20000
+                            },
+                            "waitForCompletion": true
+                        }
+                    ]
+                },
+                {
+                    "id": "wave",
+                    "source": "animations/Normal/nick normal wave.webm",
+                    "loop": false,
+                    "loopCount": 4,
+                    "entryTransition": {
+                        "source": "animations/Normal/nick normal wave trans.webm",
+                        "loop": false
+                    },
+                    "exitTransition": {
+                        "source": "animations/Normal/nick normal wave trans reverse.webm",
+                        "loop": false
+                    },
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 20000,
+                                "max": 40000
+                            },
+                            "waitForCompletion": true
+                        }
+                    ]
+                },
+                {
+                    "id": "boop",
+                    "source": "animations/Normal/nick normal boop.webm",
+                    "loop": false,
+                    "interactionTriggers": [
+                        {
+                            "type": "touch",
+                            "region": {
+                                "x": 0.3235,
+                                "y": 0.4522,
+                                "width": 0.3613,
+                                "height": 0.1426
+                            },
+                            "triggerCounter": {
+                                "id": "boop",
+                                "increment": 1
+                            },
+                            "waitForCompletion": false
+                        }
+                    ]
+                },
+                {
+                    "id": "pet",
+                    "source": "animations/Normal/nick normal pat.webm",
+                    "loop": false,
+                    "entryTransition": {
+                        "source": "animations/Normal/nick normal pat trans.webm",
+                        "loop": false
+                    },
+                    "exitTransition": {
+                        "source": "animations/Normal/nick normal pat trans reverse.webm",
+                        "loop": false
+                    },
+                    "setsMood": "happy",
+                    "interactionTriggers": [
+                        {
+                            "type": "rub",
+                            "loopWhileActive": true,
+                            "region": {
+                                "x": 0.2927,
+                                "y": 0.2757,
+                                "width": 0.458,
+                                "height": 0.1765
+                            },
+                            "triggerCounter": {
+                                "id": "pet"
+                            },
+                            "waitForCompletion": false
+                        },
+                        {
+                            "type": "touch",
+                            "region": {
+                                "x": 0.2927,
+                                "y": 0.2757,
+                                "width": 0.458,
+                                "height": 0.1765
+                            },
+                            "triggerCounter": {
+                                "id": "pet"
+                            },
+                            "waitForCompletion": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "greek",
+            "background": {
+                "source": "animations/Greek/nick greek background.webm",
+                "loop": true
+            },
+            "entryAnimation": {
+                "source": "animations/Greek/nick greek portal out.webm",
+                "loop": false
+            },
+            "exitAnimation": {
+                "source": "animations/Greek/nick greek portal in.webm",
+                "loop": false
+            },
+            "sceneDuration": {
+                "min": 90000,
+                "max": 150000
+            },
+            "additionalLayers": [
+                {
+                    "id": "tail",
+                    "source": "animations/Greek/nick greek tail.webm",
+                    "loop": true,
+                    "layerOrder": 2,
+                    "layerPriority": "background",
+                    "position": {
+                        "x": 0,
+                        "y": 0
+                    }
+                },
+                {
+                    "id": "name",
+                    "source": "animations/nick name.webm",
+                    "loop": true,
+                    "layerOrder": 2,
+                    "layerPriority": "foreground",
+                    "alignment": {
+                        "horizontal": "center",
+                        "vertical": "bottom"
+                    },
+                    "size": {
+                        "width": "100%",
+                        "height": "auto"
+                    }
+                }
+            ],
+            "defaultAnimation": "idle",
+            "defaultMood": "neutral",
+            "moods": [
+                {
+                    "id": "neutral",
+                    "setAnimations": [
+                        {
+                            "animation": "tail",
+                            "speed": 1
+                        }
+                    ],
+                    "interactionTriggers": []
+                },
+                {
+                    "id": "happy",
+                    "setAnimations": [
+                        {
+                            "animation": "tail",
+                            "speed": 2
+                        }
+                    ],
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 40000,
+                                "max": 50000
+                            },
+                            "duration": 10000,
+                            "waitForCompletion": false
+                        }
+                    ]
+                }
+            ],
+            "animations": [
+                {
+                    "id": "idle",
+                    "source": "animations/Greek/nick greek idle.webm",
+                    "loop": true
+                },
+                {
+                    "id": "lookaround",
+                    "source": "animations/Greek/nick greek lookaround.webm",
+                    "loop": false,
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 10000,
+                                "max": 20000
+                            },
+                            "waitForCompletion": true
+                        }
+                    ]
+                },
+                {
+                    "id": "wave",
+                    "source": "animations/Greek/nick greek wave.webm",
+                    "loop": false,
+                    "loopCount": 4,
+                    "entryTransition": {
+                        "source": "animations/Greek/nick greek wave trans.webm",
+                        "loop": false
+                    },
+                    "exitTransition": {
+                        "source": "animations/Greek/nick greek wave trans reverse.webm",
+                        "loop": false
+                    },
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 20000,
+                                "max": 40000
+                            },
+                            "waitForCompletion": true
+                        }
+                    ]
+                },
+                {
+                    "id": "boop",
+                    "source": "animations/Greek/nick greek boop.webm",
+                    "loop": false,
+                    "interactionTriggers": [
+                        {
+                            "type": "touch",
+                            "region": {
+                                "x": 0.3235,
+                                "y": 0.4522,
+                                "width": 0.3613,
+                                "height": 0.1426
+                            },
+                            "triggerCounter": {
+                                "id": "boop",
+                                "increment": 1
+                            },
+                            "waitForCompletion": false
+                        }
+                    ]
+                },
+                {
+                    "id": "pet",
+                    "source": "animations/Greek/nick greek pat.webm",
+                    "loop": false,
+                    "entryTransition": {
+                        "source": "animations/Greek/nick greek pat trans.webm",
+                        "loop": false
+                    },
+                    "exitTransition": {
+                        "source": "animations/Greek/nick greek pat trans reverse.webm",
+                        "loop": false
+                    },
+                    "setsMood": "happy",
+                    "interactionTriggers": [
+                        {
+                            "type": "rub",
+                            "loopWhileActive": true,
+                            "region": {
+                                "x": 0.2927,
+                                "y": 0.2757,
+                                "width": 0.458,
+                                "height": 0.1765
+                            },
+                            "triggerCounter": {
+                                "id": "pet"
+                            },
+                            "waitForCompletion": false
+                        },
+                        {
+                            "type": "touch",
+                            "region": {
+                                "x": 0.2927,
+                                "y": 0.2757,
+                                "width": 0.458,
+                                "height": 0.1765
+                            },
+                            "triggerCounter": {
+                                "id": "pet"
+                            },
+                            "waitForCompletion": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "prehistoric",
+            "background": {
+                "source": "animations/Prehistoric/nick prehistoric background.webm",
+                "loop": true
+            },
+            "entryAnimation": {
+                "source": "animations/Prehistoric/nick prehistoric portal out.webm",
+                "loop": false
+            },
+            "exitAnimation": {
+                "source": "animations/Prehistoric/nick prehistoric portal in.webm",
+                "loop": false
+            },
+            "sceneDuration": {
+                "min": 90000,
+                "max": 150000
+            },
+            "additionalLayers": [
+                {
+                    "id": "tail",
+                    "source": "animations/Prehistoric/nick prehistoric tail.webm",
+                    "loop": true,
+                    "layerOrder": 2,
+                    "layerPriority": "background",
+                    "position": {
+                        "x": 0,
+                        "y": 0
+                    }
+                },
+                {
+                    "id": "name",
+                    "source": "animations/nick name.webm",
+                    "loop": true,
+                    "layerOrder": 2,
+                    "layerPriority": "foreground",
+                    "alignment": {
+                        "horizontal": "center",
+                        "vertical": "bottom"
+                    },
+                    "size": {
+                        "width": "100%",
+                        "height": "auto"
+                    }
+                }
+            ],
+            "defaultAnimation": "idle",
+            "defaultMood": "neutral",
+            "moods": [
+                {
+                    "id": "neutral",
+                    "setAnimations": [
+                        {
+                            "animation": "tail",
+                            "speed": 1
+                        }
+                    ],
+                    "interactionTriggers": []
+                },
+                {
+                    "id": "happy",
+                    "setAnimations": [
+                        {
+                            "animation": "tail",
+                            "speed": 2
+                        }
+                    ],
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 40000,
+                                "max": 50000
+                            },
+                            "duration": 10000,
+                            "waitForCompletion": false
+                        }
+                    ]
+                }
+            ],
+            "animations": [
+                {
+                    "id": "idle",
+                    "source": "animations/Prehistoric/nick prehistoric idle.webm",
+                    "loop": true
+                },
+                {
+                    "id": "lookaround",
+                    "source": "animations/Prehistoric/nick prehistoric lookaround.webm",
+                    "loop": false,
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 10000,
+                                "max": 20000
+                            },
+                            "waitForCompletion": true
+                        }
+                    ]
+                },
+                {
+                    "id": "wave",
+                    "source": "animations/Prehistoric/nick prehistoric wave.webm",
+                    "loop": false,
+                    "loopCount": 4,
+                    "entryTransition": {
+                        "source": "animations/Prehistoric/nick prehistoric wave trans.webm",
+                        "loop": false
+                    },
+                    "exitTransition": {
+                        "source": "animations/Prehistoric/nick prehistoric wave trans reverse.webm",
+                        "loop": false
+                    },
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 20000,
+                                "max": 40000
+                            },
+                            "waitForCompletion": true
+                        }
+                    ]
+                },
+                {
+                    "id": "boop",
+                    "source": "animations/Prehistoric/nick prehistoric boop.webm",
+                    "loop": false,
+                    "interactionTriggers": [
+                        {
+                            "type": "touch",
+                            "region": {
+                                "x": 0.3235,
+                                "y": 0.4522,
+                                "width": 0.3613,
+                                "height": 0.1426
+                            },
+                            "triggerCounter": {
+                                "id": "boop",
+                                "increment": 1
+                            },
+                            "waitForCompletion": false
+                        }
+                    ]
+                },
+                {
+                    "id": "pet",
+                    "source": "animations/Prehistoric/nick prehistoric pat.webm",
+                    "loop": false,
+                    "entryTransition": {
+                        "source": "animations/Prehistoric/nick prehistoric pat trans.webm",
+                        "loop": false
+                    },
+                    "exitTransition": {
+                        "source": "animations/Prehistoric/nick prehistoric pat trans reverse.webm",
+                        "loop": false
+                    },
+                    "setsMood": "happy",
+                    "interactionTriggers": [
+                        {
+                            "type": "rub",
+                            "loopWhileActive": true,
+                            "region": {
+                                "x": 0.2927,
+                                "y": 0.2757,
+                                "width": 0.458,
+                                "height": 0.1765
+                            },
+                            "triggerCounter": {
+                                "id": "pet"
+                            },
+                            "waitForCompletion": false
+                        },
+                        {
+                            "type": "touch",
+                            "region": {
+                                "x": 0.2927,
+                                "y": 0.2757,
+                                "width": 0.458,
+                                "height": 0.1765
+                            },
+                            "triggerCounter": {
+                                "id": "pet"
+                            },
+                            "waitForCompletion": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "apocalyptic",
+            "background": {
+                "source": "animations/Apocalyptic/nick apocalypse background.webm",
+                "loop": true
+            },
+            "entryAnimation": {
+                "source": "animations/Apocalyptic/nick apocalypse portal out.webm",
+                "loop": false
+            },
+            "exitAnimation": {
+                "source": "animations/Apocalyptic/nick apocalypse portal in.webm",
+                "loop": false
+            },
+            "sceneDuration": {
+                "min": 90000,
+                "max": 150000
+            },
+            "additionalLayers": [
+                {
+                    "id": "tail",
+                    "source": "animations/Apocalyptic/nick apocalypse tail.webm",
+                    "loop": true,
+                    "layerOrder": 2,
+                    "layerPriority": "background",
+                    "position": {
+                        "x": 0,
+                        "y": 0
+                    }
+                },
+                {
+                    "id": "name",
+                    "source": "animations/nick name.webm",
+                    "loop": true,
+                    "layerOrder": 2,
+                    "layerPriority": "foreground",
+                    "alignment": {
+                        "horizontal": "center",
+                        "vertical": "bottom"
+                    },
+                    "size": {
+                        "width": "100%",
+                        "height": "auto"
+                    }
+                }
+            ],
+            "defaultAnimation": "idle",
+            "defaultMood": "neutral",
+            "moods": [
+                {
+                    "id": "neutral",
+                    "setAnimations": [
+                        {
+                            "animation": "tail",
+                            "speed": 1
+                        }
+                    ],
+                    "interactionTriggers": []
+                },
+                {
+                    "id": "happy",
+                    "setAnimations": [
+                        {
+                            "animation": "tail",
+                            "speed": 2
+                        }
+                    ],
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 40000,
+                                "max": 50000
+                            },
+                            "duration": 10000,
+                            "waitForCompletion": false
+                        }
+                    ]
+                }
+            ],
+            "animations": [
+                {
+                    "id": "idle",
+                    "source": "animations/Apocalyptic/nick apocalypse idle.webm",
+                    "loop": true
+                },
+                {
+                    "id": "lookaround",
+                    "source": "animations/Apocalyptic/nick apocalypse lookaround.webm",
+                    "loop": false,
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 10000,
+                                "max": 20000
+                            },
+                            "waitForCompletion": true
+                        }
+                    ]
+                },
+                {
+                    "id": "wave",
+                    "source": "animations/Apocalyptic/nick apocalypse wave.webm",
+                    "loop": false,
+                    "loopCount": 4,
+                    "entryTransition": {
+                        "source": "animations/Apocalyptic/nick apocalypse wave trans.webm",
+                        "loop": false
+                    },
+                    "exitTransition": {
+                        "source": "animations/Apocalyptic/nick apocalypse wave trans reverse.webm",
+                        "loop": false
+                    },
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 20000,
+                                "max": 40000
+                            },
+                            "waitForCompletion": true
+                        }
+                    ]
+                },
+                {
+                    "id": "boop",
+                    "source": "animations/Apocalyptic/nick apocalypse boop.webm",
+                    "loop": false,
+                    "interactionTriggers": [
+                        {
+                            "type": "touch",
+                            "region": {
+                                "x": 0.3235,
+                                "y": 0.4522,
+                                "width": 0.3613,
+                                "height": 0.1426
+                            },
+                            "triggerCounter": {
+                                "id": "boop",
+                                "increment": 1
+                            },
+                            "waitForCompletion": false
+                        }
+                    ]
+                },
+                {
+                    "id": "pet",
+                    "source": "animations/Apocalyptic/nick apocalypse pat.webm",
+                    "loop": false,
+                    "entryTransition": {
+                        "source": "animations/Apocalyptic/nick apocalypse pat trans.webm",
+                        "loop": false
+                    },
+                    "exitTransition": {
+                        "source": "animations/Apocalyptic/nick apocalypse pat trans reverse.webm",
+                        "loop": false
+                    },
+                    "setsMood": "happy",
+                    "interactionTriggers": [
+                        {
+                            "type": "rub",
+                            "loopWhileActive": true,
+                            "region": {
+                                "x": 0.2927,
+                                "y": 0.2757,
+                                "width": 0.458,
+                                "height": 0.1765
+                            },
+                            "triggerCounter": {
+                                "id": "pet"
+                            },
+                            "waitForCompletion": false
+                        },
+                        {
+                            "type": "touch",
+                            "region": {
+                                "x": 0.2927,
+                                "y": 0.2757,
+                                "width": 0.458,
+                                "height": 0.1765
+                            },
+                            "triggerCounter": {
+                                "id": "pet"
+                            },
+                            "waitForCompletion": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "cyberpunk",
+            "background": {
+                "source": "animations/Cyberpunk/nick cyberpunk background.webm",
+                "loop": true
+            },
+            "entryAnimation": {
+                "source": "animations/Cyberpunk/nick cyberpunk portal out.webm",
+                "loop": false
+            },
+            "exitAnimation": {
+                "source": "animations/Cyberpunk/nick cyberpunk portal in.webm",
+                "loop": false
+            },
+            "sceneDuration": {
+                "min": 90000,
+                "max": 150000
+            },
+            "additionalLayers": [
+                {
+                    "id": "tail",
+                    "source": "animations/Cyberpunk/nick cyberpunk tail.webm",
+                    "loop": true,
+                    "layerOrder": 2,
+                    "layerPriority": "background",
+                    "position": {
+                        "x": 0,
+                        "y": 0
+                    }
+                },
+                {
+                    "id": "name",
+                    "source": "animations/nick name.webm",
+                    "loop": true,
+                    "layerOrder": 2,
+                    "layerPriority": "foreground",
+                    "alignment": {
+                        "horizontal": "center",
+                        "vertical": "bottom"
+                    },
+                    "size": {
+                        "width": "100%",
+                        "height": "auto"
+                    }
+                }
+            ],
+            "defaultAnimation": "idle",
+            "defaultMood": "neutral",
+            "moods": [
+                {
+                    "id": "neutral",
+                    "setAnimations": [
+                        {
+                            "animation": "tail",
+                            "speed": 1
+                        }
+                    ],
+                    "interactionTriggers": []
+                },
+                {
+                    "id": "happy",
+                    "setAnimations": [
+                        {
+                            "animation": "tail",
+                            "speed": 2
+                        }
+                    ],
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 40000,
+                                "max": 50000
+                            },
+                            "duration": 10000,
+                            "waitForCompletion": false
+                        }
+                    ]
+                }
+            ],
+            "animations": [
+                {
+                    "id": "idle",
+                    "source": "animations/Cyberpunk/nick cyberpunk idle.webm",
+                    "loop": true
+                },
+                {
+                    "id": "lookaround",
+                    "source": "animations/Cyberpunk/nick cyberpunk lookaround.webm",
+                    "loop": false,
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 10000,
+                                "max": 20000
+                            },
+                            "waitForCompletion": true
+                        }
+                    ]
+                },
+                {
+                    "id": "wave",
+                    "source": "animations/Cyberpunk/nick cyberpunk wave.webm",
+                    "loop": false,
+                    "loopCount": 4,
+                    "entryTransition": {
+                        "source": "animations/Cyberpunk/nick cyberpunk wave trans.webm",
+                        "loop": false
+                    },
+                    "exitTransition": {
+                        "source": "animations/Cyberpunk/nick cyberpunk wave trans reverse.webm",
+                        "loop": false
+                    },
+                    "interactionTriggers": [
+                        {
+                            "type": "random",
+                            "timeRange": {
+                                "min": 20000,
+                                "max": 40000
+                            },
+                            "waitForCompletion": true
+                        }
+                    ]
+                },
+                {
+                    "id": "boop",
+                    "source": "animations/Cyberpunk/nick cyberpunk boop.webm",
+                    "loop": false,
+                    "interactionTriggers": [
+                        {
+                            "type": "touch",
+                            "region": {
+                                "x": 0.3235,
+                                "y": 0.4522,
+                                "width": 0.3613,
+                                "height": 0.1426
+                            },
+                            "triggerCounter": {
+                                "id": "boop",
+                                "increment": 1
+                            },
+                            "waitForCompletion": false
+                        }
+                    ]
+                },
+                {
+                    "id": "pet",
+                    "source": "animations/Cyberpunk/nick cyberpunk pat.webm",
+                    "loop": false,
+                    "entryTransition": {
+                        "source": "animations/Cyberpunk/nick cyberpunk pat trans.webm",
+                        "loop": false
+                    },
+                    "exitTransition": {
+                        "source": "animations/Cyberpunk/nick cyberpunk pat trans reverse.webm",
+                        "loop": false
+                    },
+                    "setsMood": "happy",
+                    "interactionTriggers": [
+                        {
+                            "type": "rub",
+                            "loopWhileActive": true,
+                            "region": {
+                                "x": 0.2927,
+                                "y": 0.2757,
+                                "width": 0.458,
+                                "height": 0.1765
+                            },
+                            "triggerCounter": {
+                                "id": "pet"
+                            },
+                            "waitForCompletion": false
+                        },
+                        {
+                            "type": "touch",
+                            "region": {
+                                "x": 0.2927,
+                                "y": 0.2757,
+                                "width": 0.458,
+                                "height": 0.1765
+                            },
+                            "triggerCounter": {
+                                "id": "pet"
+                            },
+                            "waitForCompletion": false
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

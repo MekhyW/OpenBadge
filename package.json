@@ -1,0 +1,32 @@
+{
+  "name": "open-badge",
+  "version": "1.0.0",
+  "description": "OpenBadge - Virtual Mascot",
+  "type": "module",
+  "keywords": [
+    "capacitor",
+    "mobile"
+  ],
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "update": "npm run build && npx cap sync",
+    "version:android": "node scripts/bump-android-version.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/core": "latest",
+    "@capacitor/haptics": "latest",
+    "@capacitor/splash-screen": "latest",
+    "socket.io-client": "^4.8.3"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "latest",
+    "typescript": "^5.8.0",
+    "vite": "^7.3.1"
+  },
+  "author": "",
+  "license": "ISC"
+}
