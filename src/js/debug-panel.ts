@@ -1,7 +1,5 @@
 import type { AnimationEngine } from './animation-engine';
 import type { AnimationConfig, TouchRegion } from './types';
-import { apiLog, countersState, onStateChange, API_URL, SOCKET_BASE_URL } from './api';
-import type { ApiLogEntry } from './api';
 
 const READY_STATE_LABELS: Record<number, string> = {
     [-1]: 'NOT LOADED',
@@ -105,14 +103,12 @@ export function createDebugPanel(
     <div class="debug-tabs">
       <button class="debug-tab debug-tab-active" data-tab="status">Status</button>
       <button class="debug-tab" data-tab="scenes">Scenes</button>
-      <button class="debug-tab" data-tab="api">API</button>
       <button class="debug-tab" data-tab="config">Config</button>
       <button class="debug-tab" data-tab="layers">Layers</button>
       <button class="debug-tab" data-tab="perf">Perf</button>
     </div>
     <div id="debug-content"></div>
     <div id="debug-scenes-content" class="debug-tab-hidden"></div>
-    <div id="debug-api-content" class="debug-tab-hidden"></div>
     <div id="debug-config-content" class="debug-tab-hidden"></div>
     <div id="debug-layers-content" class="debug-tab-hidden"></div>
     <div id="debug-perf-content" class="debug-tab-hidden"></div>
@@ -121,7 +117,6 @@ export function createDebugPanel(
 
     const content = panel.querySelector('#debug-content') as HTMLElement;
     const scenesContent = panel.querySelector('#debug-scenes-content') as HTMLElement;
-    const apiContent = panel.querySelector('#debug-api-content') as HTMLElement;
     const configContent = panel.querySelector('#debug-config-content') as HTMLElement;
     const layersContent = panel.querySelector('#debug-layers-content') as HTMLElement;
     const perfContent = panel.querySelector('#debug-perf-content') as HTMLElement;
@@ -542,7 +537,6 @@ export function createDebugPanel(
         });
         content.classList.add('debug-tab-hidden');
         scenesContent.classList.add('debug-tab-hidden');
-        apiContent.classList.add('debug-tab-hidden');
         configContent.classList.add('debug-tab-hidden');
         layersContent.classList.add('debug-tab-hidden');
         perfContent.classList.add('debug-tab-hidden');
@@ -552,9 +546,6 @@ export function createDebugPanel(
         } else if (tab === 'scenes') {
             scenesContent.classList.remove('debug-tab-hidden');
             refreshScenes();
-        } else if (tab === 'api') {
-            apiContent.classList.remove('debug-tab-hidden');
-            refreshApi();
         } else if (tab === 'config') {
             configContent.classList.remove('debug-tab-hidden');
             refreshConfig();
@@ -576,78 +567,6 @@ export function createDebugPanel(
             switchTab(tabBtn.dataset.tab!);
         });
     }
-
-    // ── API tab ──
-
-    const LOG_LEVEL_COLORS: Record<string, string> = {
-        info: '#90caf9',
-        warn: '#ffb74d',
-        error: '#ef9a9a',
-        success: '#a5d6a7',
-    };
-
-    const formatTime = (ts: number): string => {
-        const d = new Date(ts);
-        return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
-    };
-
-    const refreshApi = (): void => {
-        const state = countersState;
-        const entries = apiLog.getEntries();
-
-        let html = '';
-
-        // Connection info
-        html += `<div class="debug-section">`;
-        html += `<div class="debug-title">Conexão</div>`;
-        html += `<div class="debug-row"><span>API URL</span><span class="debug-value debug-url">${API_URL}</span></div>`;
-        html += `<div class="debug-row"><span>Socket URL</span><span class="debug-value debug-url">${SOCKET_BASE_URL}/counters</span></div>`;
-        html += `<div class="debug-row"><span>Socket Status</span><span class="debug-badge ${state.isSocketConnected ? 'badge-idle' : 'badge-active'}">${state.isSocketConnected ? 'CONNECTED' : 'DISCONNECTED'}</span></div>`;
-        if (state.socketError) {
-            html += `<div class="debug-row"><span>Socket Error</span><span class="debug-value" style="color:#ff6b6b">${state.socketError}</span></div>`;
-        }
-        if (state.lastSocketUpdateAt) {
-            html += `<div class="debug-row"><span>Last Update</span><span class="debug-value">${new Date(state.lastSocketUpdateAt).toLocaleTimeString()}</span></div>`;
-        }
-        html += `</div>`;
-
-        // Pending queues
-        html += `<div class="debug-section">`;
-        html += `<div class="debug-title">Pending Queue</div>`;
-        html += `<div class="debug-row"><span>Pending Boops</span><span class="debug-value">${state.pendingBoops.length}</span></div>`;
-        html += `<div class="debug-row"><span>Pending Pets</span><span class="debug-value">${state.pendingPets.length}</span></div>`;
-        html += `<div class="debug-row"><span>Socket</span><span class="debug-badge ${state.isSocketConnected ? 'badge-idle' : 'badge-active'}">${state.isSocketConnected ? 'CONNECTED' : 'DISCONNECTED'}</span></div>`;
-        html += `</div>`;
-
-        // Log entries (newest first)
-        html += `<div class="debug-section">`;
-        html += `<div class="debug-title">API Log (${entries.length})</div>`;
-        if (entries.length === 0) {
-            html += `<div class="debug-row dim">No log entries yet</div>`;
-        } else {
-            for (let i = entries.length - 1; i >= 0; i--) {
-                const e = entries[i];
-                const color = LOG_LEVEL_COLORS[e.level] || '#ccc';
-                html += `<div class="debug-log-entry">`;
-                html += `<span class="debug-log-time">${formatTime(e.timestamp)}</span>`;
-                html += `<span class="debug-log-tag" style="color:${color}">[${e.tag}]</span>`;
-                html += `<span class="debug-log-msg">${e.message}</span>`;
-                html += `</div>`;
-            }
-        }
-        html += `</div>`;
-
-        apiContent.innerHTML = html;
-    };
-
-    // Keep the API tab updated via logger push
-    apiLog.onUpdate(() => {
-        if (open && activeTab === 'api') refreshApi();
-    });
-    // Also update when counters state changes (queue lengths)
-    onStateChange(() => {
-        if (open && activeTab === 'api') refreshApi();
-    });
 
     /** Render the full config view */
     const refreshScenes = (): void => {
@@ -1191,7 +1110,6 @@ export function createDebugPanel(
             if (document.hidden || sliderActive) return;
             refresh();
             refreshOverlays();
-            if (activeTab === 'api') refreshApi();
             if (activeTab === 'config') refreshConfig();
             if (activeTab === 'layers') refreshLayers();
             if (activeTab === 'scenes') refreshScenes();

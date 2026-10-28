@@ -119,63 +119,6 @@ video::-webkit-media-controls-start-playback-button {
   pointer-events: none;
 }
 
-/* ─── Counters HUD ────────────────────────────────────────── */
-
-#counters-hud {
-  position: fixed;
-  top: 8px;
-  left: 8px;
-  z-index: 900;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 6px 12px;
-  background: rgba(0, 0, 0, 0.55);
-  border-radius: 10px;
-  color: #fff;
-  font-family: 'Courier New', monospace;
-  font-size: 13px;
-  pointer-events: none;
-  user-select: none;
-}
-
-.counter-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.counter-label {
-  opacity: 0.7;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.counter-value {
-  font-weight: bold;
-  min-width: 24px;
-  text-align: right;
-}
-
-#socket-indicator {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.socket-connected {
-  background: #4caf50;
-  box-shadow: 0 0 4px #4caf50;
-}
-
-.socket-disconnected {
-  background: #f44336;
-  box-shadow: 0 0 4px #f44336;
-}
-
 /* ─── Debug Panel ─────────────────────────────────────────── */
 
 #debug-toggle-btn {

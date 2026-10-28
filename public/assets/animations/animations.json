@@ -6,15 +6,15 @@
         {
             "id": "normal",
             "background": {
-                "source": "animations/Normal/nick normal background.webm",
+                "source": "animations/normal/nick normal background.webm",
                 "loop": true
             },
             "entryAnimation": {
-                "source": "animations/Normal/nick normal portal out.webm",
+                "source": "animations/normal/nick normal portal out.webm",
                 "loop": false
             },
             "exitAnimation": {
-                "source": "animations/Normal/nick normal portal in.webm",
+                "source": "animations/normal/nick normal portal in.webm",
                 "loop": false
             },
             "sceneDuration": {
@@ -24,7 +24,7 @@
             "additionalLayers": [
                 {
                     "id": "tail",
-                    "source": "animations/Normal/nick normal tail.webm",
+                    "source": "animations/normal/nick normal tail.webm",
                     "loop": true,
                     "layerOrder": 2,
                     "layerPriority": "background",
@@ -86,12 +86,12 @@
             "animations": [
                 {
                     "id": "idle",
-                    "source": "animations/Normal/nick normal idle.webm",
+                    "source": "animations/normal/nick normal idle.webm",
                     "loop": true
                 },
                 {
                     "id": "lookaround",
-                    "source": "animations/Normal/nick normal lookaround.webm",
+                    "source": "animations/normal/nick normal lookaround.webm",
                     "loop": false,
                     "interactionTriggers": [
                         {
@@ -106,15 +106,15 @@
                 },
                 {
                     "id": "wave",
-                    "source": "animations/Normal/nick normal wave.webm",
+                    "source": "animations/normal/nick normal wave.webm",
                     "loop": false,
                     "loopCount": 4,
                     "entryTransition": {
-                        "source": "animations/Normal/nick normal wave trans.webm",
+                        "source": "animations/normal/nick normal wave trans.webm",
                         "loop": false
                     },
                     "exitTransition": {
-                        "source": "animations/Normal/nick normal wave trans reverse.webm",
+                        "source": "animations/normal/nick normal wave trans reverse.webm",
                         "loop": false
                     },
                     "interactionTriggers": [
@@ -130,7 +130,7 @@
                 },
                 {
                     "id": "boop",
-                    "source": "animations/Normal/nick normal boop.webm",
+                    "source": "animations/normal/nick normal boop.webm",
                     "loop": false,
                     "interactionTriggers": [
                         {
@@ -151,14 +151,14 @@
                 },
                 {
                     "id": "pet",
-                    "source": "animations/Normal/nick normal pat.webm",
+                    "source": "animations/normal/nick normal pat.webm",
                     "loop": false,
                     "entryTransition": {
-                        "source": "animations/Normal/nick normal pat trans.webm",
+                        "source": "animations/normal/nick normal pat trans.webm",
                         "loop": false
                     },
                     "exitTransition": {
-                        "source": "animations/Normal/nick normal pat trans reverse.webm",
+                        "source": "animations/normal/nick normal pat trans reverse.webm",
                         "loop": false
                     },
                     "setsMood": "happy",

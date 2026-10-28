@@ -1,13 +1,5 @@
 import type { Scene, Animation, AdditionalLayer, InteractionTrigger, TouchRegion } from './types';
 import { AnimationEngine } from './animation-engine';
-import { recordBoop, recordPet } from './api';
-
-function fireCounter(trigger: InteractionTrigger): void {
-  if (!trigger.triggerCounter) return;
-  const { id } = trigger.triggerCounter;
-  if (id === 'boop') recordBoop();
-  else if (id === 'pet') recordPet();
-}
 
 let _rubActive = false;
 let _pointerDown = false;
@@ -58,7 +50,6 @@ export function setupRubTriggers(
   const removeRubLoopListener = engine.onRubLoop((animationId) => {
     if (!activeRubAnim || !activeRubTrigger) return;
     if (activeRubAnim.id !== animationId) return;
-    fireCounter(activeRubTrigger);
   });
 
   const isInRegion = (clientX: number, clientY: number, region: TouchRegion): boolean => {
@@ -214,7 +205,6 @@ export function setupTouchTriggers(
         normY >= r.y &&
         normY <= r.y + r.height
       ) {
-        fireCounter(trigger);
         if (trigger.waitForCompletion) {
           engine.triggerWhenIdle(animation.id);
         } else {

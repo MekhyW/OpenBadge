@@ -4,16 +4,8 @@ import { loadAnimationConfig, getCachedBlobUrl, prefetchAllSceneAssets } from '.
 import { AnimationEngine } from './animation-engine';
 import { setupTouchTriggers, setupRandomTriggers, setupRubTriggers } from './triggers';
 import { createDebugPanel } from './debug-panel';
-import {
-  bootstrapApi,
-  onStateChange,
-  countersState,
-  stopFlushLoop,
-  startFlushLoop,
-  connectSocket,
-  disconnectSocket,
-  fetchTotals,
-} from './api';
+import { loadProfile } from './profile-store';
+import { applyProfileAnimations, mountBadgeUi } from './badge-ui';
 
 function randomInRange(min: number, max: number): number {
   return min + Math.random() * (max - min);
@@ -286,7 +278,9 @@ async function init(): Promise<void> {
   const loadingBar = overlay.querySelector('#loading-bar') as HTMLElement;
 
   // Load configuration
-  const config = await loadAnimationConfig();
+  const profile = await loadProfile();
+  const config = await loadAnimationConfig(profile.animationConfig);
+  await applyProfileAnimations(config, profile);
   if (config.scenes.length === 0) {
     throw new Error('Animation config has no scenes');
   }
@@ -507,35 +501,27 @@ async function init(): Promise<void> {
   engine.setBackgroundOpacity(1);
   scheduleNextSceneTransition();
 
-  // Pause everything when app goes to background, resume when it comes back.
-  // The socket is also torn down: an idle WebSocket (or its reconnect loop)
-  // keeps waking the radio while the app is not even visible.
-  let lastTotalsSyncAt = 0;
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
+  // Pause animation work while the app is in the background or the setup
+  // screen is open (the editor preview needs the video decoders).
+  let editorOpen = false;
+  let suspended = false;
+  const updateSuspended = (): void => {
+    const shouldSuspend = document.hidden || editorOpen;
+    if (shouldSuspend === suspended) return;
+    suspended = shouldSuspend;
+    if (shouldSuspend) {
       cleanupTouch();
       cleanupRub();
       cleanupRandom();
       clearSceneTimer();
       engine.pause();
-      stopFlushLoop();
-      disconnectSocket();
     } else {
-      const scene = getCurrentScene();
-      cleanupRub = setupRubTriggers(container, scene, engine);
-      cleanupTouch = setupTouchTriggers(container, scene, engine);
-      cleanupRandom = setupRandomTriggers(scene, engine);
+      setupSceneTriggers(getCurrentScene());
       engine.resume();
-      startFlushLoop();
-      connectSocket();
-      // Refresh totals missed while backgrounded, at most once per 30s
-      if (Date.now() - lastTotalsSyncAt > 30000) {
-        lastTotalsSyncAt = Date.now();
-        void fetchTotals();
-      }
       scheduleNextSceneTransition();
     }
-  });
+  };
+  document.addEventListener('visibilitychange', updateSuspended);
 
   // Debug panel
   createDebugPanel(engine, config, transitionToScene, {
@@ -544,53 +530,13 @@ async function init(): Promise<void> {
     getNextTransition: getNextSceneTransition,
   });
 
-  // Bootstrap API integration (session + WebSocket + flush loop)
-  // Retries automatically on failure with increasing delay
-  bootstrapApi();
-
-  // Counters HUD
-  const countersHud = document.createElement('div');
-  countersHud.id = 'counters-hud';
-  countersHud.innerHTML = `
-    <div class="counter-item">
-      <span class="counter-label">Boops</span>
-      <span id="counter-boops" class="counter-value">0</span>
-    </div>
-    <div class="counter-item">
-      <span class="counter-label">Pets</span>
-      <span id="counter-pets" class="counter-value">0</span>
-    </div>
-    <span id="socket-indicator" class="socket-disconnected" title="Socket status"></span>
-  `;
-  document.body.appendChild(countersHud);
-
-  const boopsEl = document.getElementById('counter-boops')!;
-  const petsEl = document.getElementById('counter-pets')!;
-  const socketIndicator = document.getElementById('socket-indicator')!;
-
-  function updateCountersUI(): void {
-    boopsEl.textContent = String(countersState.totalBoops);
-    petsEl.textContent = String(countersState.totalPets);
-    socketIndicator.className = countersState.isSocketConnected
-      ? 'socket-connected'
-      : 'socket-disconnected';
-    socketIndicator.title = countersState.isSocketConnected ? 'Online' : 'Offline';
-  }
-
-  // Coalesce HUD updates into the next frame: state changes fire inside touch
-  // handlers, and synchronous DOM writes there compete with the video swap.
-  let hudUpdatePending = false;
-  const scheduleCountersUI = (): void => {
-    if (hudUpdatePending) return;
-    hudUpdatePending = true;
-    requestAnimationFrame(() => {
-      hudUpdatePending = false;
-      updateCountersUI();
-    });
-  };
-
-  updateCountersUI();
-  onStateChange(scheduleCountersUI);
+  mountBadgeUi(profile, config, {
+    onMotion: () => engine.triggerWhenIdle('lookaround'),
+    onEditorOpenChange: (open) => {
+      editorOpen = open;
+      updateSuspended();
+    },
+  });
 
   // Fade out loading overlay
   overlay.classList.add('fade-out');

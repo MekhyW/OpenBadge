@@ -1,12 +1,14 @@
 import type { Animation, AnimationConfig, Scene, TransitionSource } from './types';
+import { loadMedia } from './profile-store';
 
-export async function loadAnimationConfig(): Promise<AnimationConfig> {
-  const response = await fetch('./assets/animations/animations.json');
-  if (!response.ok) {
-    throw new Error(`Failed to load animation config: ${response.status}`);
+export async function loadAnimationConfig(savedConfig?: AnimationConfig): Promise<AnimationConfig> {
+  let config: AnimationConfig;
+  if (savedConfig) config = structuredClone(savedConfig);
+  else {
+    const response = await fetch('./assets/animations/animations.json');
+    if (!response.ok) throw new Error(`Failed to load animation config: ${response.status}`);
+    config = (await response.json()) as AnimationConfig;
   }
-
-  const config = (await response.json()) as AnimationConfig;
   return normalizeTransitionSources(config);
 }
 
@@ -24,12 +26,15 @@ const blobUrlCache = new Map<string, Promise<string>>();
 export function getCachedBlobUrl(source: string): Promise<string> {
   let cached = blobUrlCache.get(source);
   if (!cached) {
-    cached = fetch(resolveAssetPath(source)).then(async (response) => {
-      if (!response.ok) {
-        throw new Error(`Failed to fetch ${resolveAssetPath(source)}: ${response.status}`);
-      }
-      return URL.createObjectURL(await response.blob());
-    });
+    cached = (source.startsWith('local:')
+      ? loadMedia(source.slice('local:'.length)).then((blob) => {
+        if (!blob) throw new Error(`Uploaded animation is missing: ${source}`);
+        return blob;
+      })
+      : fetch(resolveAssetPath(source)).then(async (response) => {
+        if (!response.ok) throw new Error(`Failed to fetch ${resolveAssetPath(source)}: ${response.status}`);
+        return response.blob();
+      })).then((blob) => URL.createObjectURL(blob));
     // Failed fetches must not poison the cache
     cached.catch(() => blobUrlCache.delete(source));
     blobUrlCache.set(source, cached);

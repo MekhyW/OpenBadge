@@ -1,5 +1,6 @@
 import type { Scene, Animation, AdditionalLayer, Mood } from './types';
 import { getCachedBlobUrl } from './config-loader';
+import { applyLayerPlacement, layerZIndex } from './layer-layout';
 
 interface QueueItem {
   animationId: string;
@@ -423,9 +424,7 @@ export class AnimationEngine {
     for (const [index, layer] of (this.scene.additionalLayers ?? []).entries()) {
       const layerKey = `${this.scene.id}:${index}`;
       const layerRate = this.layerStates.get(layerKey)?.playbackRate ?? 1;
-      const zIndex = layer.layerPriority === 'foreground'
-        ? 20 + layer.layerOrder
-        : layer.layerOrder;
+      const zIndex = layerZIndex(layer);
 
       const layerPromise = getCachedBlobUrl(layer.source)
         .then((blobUrl) => {
@@ -442,60 +441,7 @@ export class AnimationEngine {
           video.style.zIndex = String(zIndex);
           video.style.display = 'none';
           video.style.background = 'transparent';
-          video.style.inset = 'auto';
-          video.style.left = 'auto';
-          video.style.right = 'auto';
-          video.style.top = 'auto';
-          video.style.bottom = 'auto';
-          video.style.marginLeft = '0px';
-          video.style.marginTop = '0px';
-          video.style.transform = '';
-
-          // Size
-          const size = layer.size ?? { width: '100%', height: '100%' };
-          video.style.width = size.width;
-          video.style.height = size.height;
-          if (size.width === 'auto' || size.height === 'auto') {
-            video.style.objectFit = 'contain';
-          } else {
-            video.style.objectFit = 'cover';
-          }
-
-          // Position & alignment
-          const alignment = layer.alignment ?? { horizontal: 'left', vertical: 'top' };
-          const posX = layer.position?.x ?? 0;
-          const posY = layer.position?.y ?? 0;
-
-          switch (alignment.horizontal) {
-            case 'left':
-              video.style.left = `${posX}px`;
-              break;
-            case 'center':
-              video.style.left = '50%';
-              video.style.transform = 'translateX(-50%)';
-              video.style.marginLeft = `${posX}px`;
-              break;
-            case 'right':
-              video.style.right = `${posX}px`;
-              break;
-          }
-          switch (alignment.vertical) {
-            case 'top':
-              video.style.top = `${posY}px`;
-              break;
-            case 'center': {
-              video.style.top = '50%';
-              const existingTransform = video.style.transform;
-              video.style.transform = existingTransform
-                ? `${existingTransform} translateY(-50%)`
-                : 'translateY(-50%)';
-              video.style.marginTop = `${posY}px`;
-              break;
-            }
-            case 'bottom':
-              video.style.bottom = `${posY}px`;
-              break;
-          }
+          applyLayerPlacement(video, layer);
 
           this.container.appendChild(video);
           this.layerVideoElements.set(layerKey, video);
