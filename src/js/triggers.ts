@@ -7,11 +7,7 @@ let _pointerDown = false;
 // Collect rub regions so touch triggers can tell if a tap is in a rub zone
 const _rubRegions: TouchRegion[] = [];
 
-export function setupRubTriggers(
-  container: HTMLElement,
-  scene: Scene,
-  engine: AnimationEngine,
-): () => void {
+export function setupRubTriggers(container: HTMLElement, scene: Scene, engine: AnimationEngine): () => void {
   _rubRegions.length = 0;
   _rubActive = false;
   _pointerDown = false;
@@ -140,11 +136,7 @@ export function setupRubTriggers(
   };
 }
 
-export function setupTouchTriggers(
-  container: HTMLElement,
-  scene: Scene,
-  engine: AnimationEngine,
-): () => void {
+export function setupTouchTriggers(container: HTMLElement, scene: Scene, engine: AnimationEngine): () => void {
   const touchAnimations: { animation: Animation; trigger: InteractionTrigger }[] = [];
 
   for (const anim of scene.animations) {

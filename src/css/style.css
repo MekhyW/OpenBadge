@@ -119,6 +119,23 @@ video::-webkit-media-controls-start-playback-button {
   pointer-events: none;
 }
 
+.auto-hide {
+  transition: opacity 250ms ease;
+}
+
+body:not(.controls-visible) .auto-hide {
+  opacity: 0;
+}
+
+body:not(.controls-visible) .auto-hide,
+body:not(.controls-visible) .auto-hide * {
+  pointer-events: none !important;
+}
+body:has(#debug-panel.debug-visible) #debug-toggle-btn {
+  opacity: 1;
+  pointer-events: auto !important;
+}
+
 /* ─── Debug Panel ─────────────────────────────────────────── */
 
 #debug-toggle-btn {

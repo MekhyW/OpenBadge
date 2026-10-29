@@ -6,6 +6,7 @@ import { setupTouchTriggers, setupRandomTriggers, setupRubTriggers } from './tri
 import { createDebugPanel } from './debug-panel';
 import { loadProfile } from './profile-store';
 import { applyProfileAnimations, mountBadgeUi } from './badge-ui';
+import { setupAutoHideControls } from './auto-hide-controls';
 
 function randomInRange(min: number, max: number): number {
   return min + Math.random() * (max - min);
@@ -501,8 +502,7 @@ async function init(): Promise<void> {
   engine.setBackgroundOpacity(1);
   scheduleNextSceneTransition();
 
-  // Pause animation work while the app is in the background or the setup
-  // screen is open (the editor preview needs the video decoders).
+  // Pause animation work while the app is in the background or the setup screen is open (the editor preview needs the video decoders).
   let editorOpen = false;
   let suspended = false;
   const updateSuspended = (): void => {
@@ -537,6 +537,9 @@ async function init(): Promise<void> {
       updateSuspended();
     },
   });
+
+  // Buttons appear on tap and hide again after a few seconds
+  setupAutoHideControls();
 
   // Fade out loading overlay
   overlay.classList.add('fade-out');

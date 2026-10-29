@@ -60,30 +60,21 @@ function describePlayback(animation: Animation): string {
   return animation.loop ? 'Loops' : 'Plays once';
 }
 
-export function createSceneEditor(
-  context: EditorContext,
-  scene: Scene,
-  actions: { onBack: () => void; onDuplicate: () => void; onDelete: () => void; onRenamed: () => void },
-): SceneEditorHandle {
+export function createSceneEditor(context: EditorContext, scene: Scene, actions: { onBack: () => void; onDuplicate: () => void; onDelete: () => void; onRenamed: () => void }): SceneEditorHandle {
   const { config } = context;
   const stage = new SceneStage();
   const describe = (source: string | undefined): string => describeSource(source, context.mediaNames);
-
   let tab: Tab = 'general';
   const openKeys = new Set<string>();
   let selectedKey = '';
   let regionsVisible = false;
   let activeRegionKey = '';
-
   const title = h('h2', { class: 'se-title' });
   const tabBar = h('nav', { class: 'ed-tabs se-tabs', role: 'tablist' });
   const tabContent = h('div', { class: 'se-tab-content' });
   const nowPlaying = h('span', { class: 'se-now-playing' });
   const quickPicks = h('div', { class: 'se-quick', role: 'group', 'aria-label': 'Preview an animation' });
-
   const changed = (): void => context.markDirty();
-
-  // ── Preview ──
 
   const play = (key: string, label: string, source: string | undefined, onTop = false): void => {
     selectedKey = key;
@@ -254,8 +245,7 @@ export function createSceneEditor(
             }
           }
           if (!options.mood) {
-            body.append(toggle('Wait for the current animation to finish', trigger.waitForCompletion, (value) => { trigger.waitForCompletion = value; changed(); },
-              'Off: interrupts whatever is playing.'));
+            body.append(toggle('Wait for the current animation to finish', trigger.waitForCompletion, (value) => { trigger.waitForCompletion = value; changed(); }, 'Off: interrupts whatever is playing.'));
           }
         };
         renderBody();
@@ -796,5 +786,12 @@ export function createSceneEditor(
   renderTab();
   updateRegions();
 
-  return { element, destroy: () => stage.destroy() };
+  return {
+    element,
+    // Stop the preview videos and take the whole scene page out of the screen.
+    destroy: () => {
+      stage.destroy();
+      element.remove();
+    },
+  };
 }

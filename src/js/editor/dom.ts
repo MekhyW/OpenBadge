@@ -5,12 +5,7 @@ type Props = Record<string, unknown> & {
   style?: Partial<CSSStyleDeclaration>;
 };
 
-/** Small element factory: h('button', { class: 'x', onclick: fn }, 'Label'). */
-export function h<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
-  props: Props | null = null,
-  ...children: (Child | Child[])[]
-): HTMLElementTagNameMap[K] {
+export function h<K extends keyof HTMLElementTagNameMap>(tag: K, props: Props | null = null, ...children: (Child | Child[])[]): HTMLElementTagNameMap[K] {
   const element = document.createElement(tag);
   if (props) {
     for (const [key, value] of Object.entries(props)) {

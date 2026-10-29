@@ -25,7 +25,7 @@ export function mountBadgeUi(profile: LocalProfile, config: AnimationConfig, opt
 
   const qrButton = h('button', { type: 'button', class: 'badge-fab', 'aria-label': 'Show badge QR code' }, icon('qr'));
   const editButton = h('button', { type: 'button', class: 'badge-fab', 'aria-label': 'Edit badge' }, icon('settings'));
-  document.body.appendChild(h('div', { id: 'badge-header' }, qrButton, editButton));
+  document.body.appendChild(h('div', { id: 'badge-header', class: 'auto-hide' }, qrButton, editButton));
 
   const qrCanvas = h('canvas', { id: 'badge-qr-canvas' });
   const qrUrl = h('p', { id: 'badge-qr-url' });
@@ -183,7 +183,7 @@ export function mountBadgeUi(profile: LocalProfile, config: AnimationConfig, opt
     h('div', { class: 'scene-card-caption' }, h('span', { class: 'scene-card-title' }, 'New scene'), h('span', { class: 'scene-card-meta' }, 'Start from a blank scene')),
     );
     return [
-      sectionHeader('Scenes', 'The badge moves between these scenes. Select one to edit its videos and behaviour.'),
+      sectionHeader('Scenes', 'The badge moves between these scenes. Select one to edit its videos and behaviour!'),
       h('div', { class: 'scene-gallery' }, cards, addCard),
     ];
   };

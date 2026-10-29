@@ -10,3 +10,10 @@ To run the provided example, you can use `npm start` command.
 ```bash
 npm start
 ```
+
+To open on Android:
+
+```bash
+npm run update
+npx cap open android
+```

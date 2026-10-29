@@ -88,7 +88,9 @@ export function createDebugPanel(
     // Button
     const btn = document.createElement('button');
     btn.id = 'debug-toggle-btn';
-    btn.textContent = '🐛';
+    btn.classList.add('auto-hide');
+    btn.setAttribute('aria-label', 'Toggle debug panel');
+    btn.textContent = '🐞';
     document.body.appendChild(btn);
 
     // Panel
@@ -900,10 +902,10 @@ export function createDebugPanel(
         // ── Controls ──
         html += `<div class="debug-section">`;
         html += `<div class="debug-title">Controls</div>`;
-        html += `<button class="debug-btn debug-btn-full" data-action="go-idle">⏹ Back to Idle</button>`;
-        html += `<button class="debug-btn debug-btn-full${showTouchRegions ? ' debug-btn-active' : ''}" data-action="toggle-touch">👆 ${showTouchRegions ? 'Hide' : 'Show'} Touch Regions</button>`;
-        html += `<button class="debug-btn debug-btn-full${isRotated ? ' debug-btn-active' : ''}" data-action="rotate-screen">🔄 ${isRotated ? 'Reset Rotation' : 'Rotate 180°'}</button>`;
-        html += `<button class="debug-btn debug-btn-full${autoRotate ? ' debug-btn-active' : ''}" data-action="toggle-auto-rotate">📐 Auto-Rotate ${autoRotate ? '(ON)' : '(OFF)'}</button>`;
+        html += `<button class="debug-btn debug-btn-full" data-action="go-idle">Back to Idle</button>`;
+        html += `<button class="debug-btn debug-btn-full${showTouchRegions ? ' debug-btn-active' : ''}" data-action="toggle-touch">${showTouchRegions ? 'Hide' : 'Show'} Touch Regions</button>`;
+        html += `<button class="debug-btn debug-btn-full${isRotated ? ' debug-btn-active' : ''}" data-action="rotate-screen">${isRotated ? 'Reset Rotation' : 'Rotate 180°'}</button>`;
+        html += `<button class="debug-btn debug-btn-full${autoRotate ? ' debug-btn-active' : ''}" data-action="toggle-auto-rotate">Auto-Rotate ${autoRotate ? '(ON)' : '(OFF)'}</button>`;
         if (moods.length > 0) {
             html += `<div class="debug-title" style="margin-top:8px">Moods</div>`;
             html += `<div class="debug-btn-grid">`;

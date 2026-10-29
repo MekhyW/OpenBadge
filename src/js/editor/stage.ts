@@ -21,12 +21,6 @@ function makeVideo(className: string): HTMLVideoElement {
   return video;
 }
 
-/**
- * The editor's live preview: the scene's background, layers and a chosen
- * character video stacked exactly as the badge stacks them. It renders at
- * the badge's real screen size and is scaled down to fit, so layer offsets
- * and touch areas line up with what the badge shows.
- */
 export class SceneStage {
   readonly element: HTMLElement;
   private readonly canvas: HTMLElement;

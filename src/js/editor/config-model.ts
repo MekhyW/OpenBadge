@@ -1,9 +1,7 @@
 import type { Animation, AnimationConfig, Scene, TransitionSource } from '../types';
 
-/** Ids the config loader generates when it turns inline transitions into animations. */
 const GENERATED_TRANSITION_ID = /__(entry|exit)(_\d+)?$/;
 
-/** Remove keys whose value is undefined so saved configs stay tidy. */
 function dropUndefined<T extends object>(value: T): T {
   for (const key of Object.keys(value) as (keyof T)[]) {
     if (value[key] === undefined) delete value[key];
@@ -11,22 +9,12 @@ function dropUndefined<T extends object>(value: T): T {
   return value;
 }
 
-/**
- * Turn the runtime (normalized) config back into the authoring shape the
- * editor works with: transitions that the loader turned into hidden
- * `<id>__entry` animations go back to being inline videos on their parent.
- */
 export function toEditableConfig(config: AnimationConfig): AnimationConfig {
   const draft = repairConfig(structuredClone(config));
   draft.settings = dropUndefined({ ...(draft.settings ?? {}) });
   draft.scenes = draft.scenes.map(inlineGeneratedTransitions);
   return draft;
 }
-
-// ── Repair ──
-// Saved or imported configs can miss required fields (the old editor let you
-// delete any property). Fill them with empty values so the editor can open,
-// and let validation tell the user what to fix.
 
 type Loose = Record<string, unknown>;
 const isObject = (value: unknown): value is Loose => typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -175,7 +163,6 @@ export function displayName(id: string | undefined): string {
   return spaced ? spaced.charAt(0).toUpperCase() + spaced.slice(1) : 'Untitled';
 }
 
-/** A short, human-readable name for a video source. */
 export function describeSource(source: string | undefined, mediaNames: Record<string, string>): string {
   if (!source) return 'No video';
   if (source.startsWith('local:')) return mediaNames[source] ?? 'Uploaded video';
@@ -214,7 +201,6 @@ export function renameLayer(scene: Scene, from: string, to: string): void {
   }
 }
 
-/** Remove an animation and every reference to it. */
 export function deleteAnimation(scene: Scene, id: string): void {
   scene.animations = scene.animations.filter((animation) => animation.id !== id);
   for (const animation of scene.animations) {
@@ -261,19 +247,15 @@ export interface ConfigIssue {
 export function validateConfig(config: AnimationConfig): ConfigIssue[] {
   const issues: ConfigIssue[] = [];
   if (!config.scenes.length) issues.push({ message: 'Add at least one scene.' });
-
   const sceneIds = new Set<string>();
   for (const scene of config.scenes) {
     const name = displayName(scene.id || 'Untitled scene');
     const add = (message: string): void => { issues.push({ sceneId: scene.id, message: `${name}: ${message}` }); };
-
     if (!scene.id.trim()) add('the scene needs a name.');
     else if (sceneIds.has(scene.id)) add('another scene already uses this name.');
     sceneIds.add(scene.id);
-
     if (!scene.background?.source) add('choose a background video.');
     if (!scene.animations.length) add('add at least one animation.');
-
     const animationIds = new Set<string>();
     for (const animation of scene.animations) {
       if (!animation.id.trim()) add('an animation needs a name.');
@@ -287,21 +269,17 @@ export function validateConfig(config: AnimationConfig): ConfigIssue[] {
       }
     }
     if (!animationIds.has(scene.defaultAnimation)) add('choose a starting animation.');
-
     const moodIds = new Set((scene.moods ?? []).map((mood) => mood.id));
     if (scene.defaultMood && !moodIds.has(scene.defaultMood)) add('the starting mood no longer exists.');
     if (moodIds.size !== (scene.moods ?? []).length) add('two moods share the same name.');
-
     for (const layer of scene.additionalLayers ?? []) {
       if (!layer.source) add(`choose a video for layer "${displayName(layer.id ?? 'layer')}".`);
     }
-
     const duration = scene.sceneDuration;
     if (duration && (duration.min <= 0 || duration.max < duration.min)) {
       add('the time on screen must be positive, with the shortest time first.');
     }
   }
-
   if (config.settings?.defaultScene && !sceneIds.has(config.settings.defaultScene)) {
     issues.push({ message: 'The starting scene no longer exists. Choose another one in Settings.' });
   }
